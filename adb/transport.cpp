@@ -922,12 +922,13 @@ static void add_qual(char **buf, size_t *buf_size,
                      const char *prefix, const char *qual, int sanitize_qual)
 {
     size_t len;
-    int prefix_len;
+    
 
     if (!buf || !*buf || !buf_size || !*buf_size || !qual || !*qual)
         return;
 
-    len = snprintf(*buf, *buf_size, "%s%n%s", prefix, &prefix_len, qual);
+    len = snprintf(*buf, *buf_size, "%s%s", prefix, qual);
+	int prefix_len = strlen(prefix);
 
     if (sanitize_qual) {
         char *cp;

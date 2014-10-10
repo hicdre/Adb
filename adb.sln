@@ -9,6 +9,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AdbWinUsbApi", "usb\winusb\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "adb", "adb\adb.vcxproj", "{9E8AE54A-B735-49E1-A4BF-EB37FA700213}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AdbHelper", "AdbHelper\AdbHelper.vcxproj", "{7B559938-60C4-4A03-844C-06A11E309D47}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestServer", "TestServer\TestServer.vcxproj", "{4AAF5ABE-F7DB-4490-AEB6-14F0F40D0E0E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestClient", "TestClient\TestClient.vcxproj", "{BFD0D6A3-426B-42CC-9DFD-E295D629DC4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +33,18 @@ Global
 		{9E8AE54A-B735-49E1-A4BF-EB37FA700213}.Debug|Win32.Build.0 = Debug|Win32
 		{9E8AE54A-B735-49E1-A4BF-EB37FA700213}.Release|Win32.ActiveCfg = Release|Win32
 		{9E8AE54A-B735-49E1-A4BF-EB37FA700213}.Release|Win32.Build.0 = Release|Win32
+		{7B559938-60C4-4A03-844C-06A11E309D47}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7B559938-60C4-4A03-844C-06A11E309D47}.Debug|Win32.Build.0 = Debug|Win32
+		{7B559938-60C4-4A03-844C-06A11E309D47}.Release|Win32.ActiveCfg = Release|Win32
+		{7B559938-60C4-4A03-844C-06A11E309D47}.Release|Win32.Build.0 = Release|Win32
+		{4AAF5ABE-F7DB-4490-AEB6-14F0F40D0E0E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4AAF5ABE-F7DB-4490-AEB6-14F0F40D0E0E}.Debug|Win32.Build.0 = Debug|Win32
+		{4AAF5ABE-F7DB-4490-AEB6-14F0F40D0E0E}.Release|Win32.ActiveCfg = Release|Win32
+		{4AAF5ABE-F7DB-4490-AEB6-14F0F40D0E0E}.Release|Win32.Build.0 = Release|Win32
+		{BFD0D6A3-426B-42CC-9DFD-E295D629DC4A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BFD0D6A3-426B-42CC-9DFD-E295D629DC4A}.Debug|Win32.Build.0 = Debug|Win32
+		{BFD0D6A3-426B-42CC-9DFD-E295D629DC4A}.Release|Win32.ActiveCfg = Release|Win32
+		{BFD0D6A3-426B-42CC-9DFD-E295D629DC4A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
