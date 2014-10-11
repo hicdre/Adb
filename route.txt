@@ -1,0 +1,35 @@
+
+//forward tcp port
+//s == local_socket
+//s->peer == remote_socket
+local_socket_event_func [read]
+=>adb_read=>_fh_socket_read //read buffer from socket
+=>remote_socket_enqueue(s->peer->enqueue) //peer socket enqueue
+=>adb_write=>bip_buffer_write //write buffer to bip, set event
+
+input_thread:
+read_packet=>adb_read=>bip_buffer_read //wait until event
+=>remote_write(atransport t->write_to_remote)
+=>usb_write(in transport_usb.cpp)
+========================================================
+//server 5037 port
+//s == local_socket
+//s->peer == smart_socket
+local_socket_event_func [read]
+=>adb_read=>_fh_socket_read //read buffer from socket
+=>smart_socket_enqueue(s->peer->enqueue) //peer socket enqueue
+=>handle server command
+
+========================================================
+//server command : host-serial:[serial]:forward:tcp:[port];tcp:[dport]
+from : handle_host_request
+=>handle_forward_request=>install_listener
+=>local_name_to_fd //create socket_loopback_server
+=>fdevent_install: listener_event_func //install listen event with the new socket
+此时创建了监听socket
+
+当有连接进入时
+from: listener_event_func
+=>adb_socket_accept //接受连接
+=>create_local_socket //创建local socket 入口为local_socket_event_func
+=>connect_to_remote=>send_packet(A_OPEN) //向usb发送打开命令[dport]

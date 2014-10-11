@@ -3,7 +3,7 @@
 #include <winsock2.h>
 #include <stdio.h>
 #include <errno.h>
-#define  TRACE_TAG  TRACE_SYSDEPS
+#define  TRACE_TAG  TRACE_TRANSPORT
 #include "adb.h"
 
 #include "utils.h"
@@ -408,7 +408,6 @@ int  adb_read(int  fd, void* buf, int len)
     if (f == NULL) {
         return -1;
     }
-
     return f->clazz->_fh_read( f, buf, len );
 }
 
@@ -520,6 +519,28 @@ _fh_socket_read( FH  f, void*  buf, int  len )
         _socket_set_errno();
         result = -1;
     }
+
+	{
+		struct sockaddr_in addr;
+		int addr_len = sizeof(addr);
+		::getsockname(f->fh_socket, (sockaddr*)&addr, &addr_len);
+		char port_buffer[100] = { 0 };
+		int port = ntohs(addr.sin_port);
+		sprintf(port_buffer, "SocketRead[%d]:", port);
+		::OutputDebugStringA(port_buffer);
+		char buffer[200] = { 0 };
+		if (result < 200)
+		{
+			char* buf2 = (char*)buf;
+			char* pb = buffer;
+			for (int nn = 0; nn < result; nn++) {
+				sprintf(pb, "%02x", buf2[nn]);
+				pb += 2;
+			}
+		}
+		::OutputDebugStringA(buffer);
+		::OutputDebugStringA("\r\n");
+	}
     return  result;
 }
 
@@ -1161,7 +1182,9 @@ _fh_socketpair_read( FH  f, void* buf, int  len )
     else
         bip = &pair->a2b_bip;
 
-    return bip_buffer_read( bip, buf, len );
+	int ret = bip_buffer_read(bip, buf, len);
+	
+	return ret;
 }
 
 static int
