@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestServer", "TestServer\Te
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestClient", "TestClient\TestClient.vcxproj", "{BFD0D6A3-426B-42CC-9DFD-E295D629DC4A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibUrlFetcher", "LibUrlFetcher\LibUrlFetcher.vcxproj", "{D490AD87-DCE0-4AD4-9DC7-6BBC48464F35}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -45,6 +47,10 @@ Global
 		{BFD0D6A3-426B-42CC-9DFD-E295D629DC4A}.Debug|Win32.Build.0 = Debug|Win32
 		{BFD0D6A3-426B-42CC-9DFD-E295D629DC4A}.Release|Win32.ActiveCfg = Release|Win32
 		{BFD0D6A3-426B-42CC-9DFD-E295D629DC4A}.Release|Win32.Build.0 = Release|Win32
+		{D490AD87-DCE0-4AD4-9DC7-6BBC48464F35}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D490AD87-DCE0-4AD4-9DC7-6BBC48464F35}.Debug|Win32.Build.0 = Debug|Win32
+		{D490AD87-DCE0-4AD4-9DC7-6BBC48464F35}.Release|Win32.ActiveCfg = Release|Win32
+		{D490AD87-DCE0-4AD4-9DC7-6BBC48464F35}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

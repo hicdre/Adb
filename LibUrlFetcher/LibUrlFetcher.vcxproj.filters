@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="build">
+      <UniqueIdentifier>{554d23e2-3bf7-4180-b1cd-1d8edef61b4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{9b2b48e3-6ef0-42bb-ace0-c8f4323b8e6c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>build</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>build</Filter>
+    </ClInclude>
+    <ClInclude Include="basictypes.h" />
+    <ClInclude Include="url_fetcher.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="url_fetcher_impl.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="url_request_status.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="http_request_headers.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="http_request_job.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="url_request.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="http_request.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="url.h">
+      <Filter>net</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>build</Filter>
+    </ClCompile>
+    <ClCompile Include="url_fetcher_impl.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="http_request_headers.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="http_request_job.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="url_request.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="http_request.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="url.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
