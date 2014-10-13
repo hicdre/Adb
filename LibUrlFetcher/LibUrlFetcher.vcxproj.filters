@@ -43,6 +43,9 @@
     <ClInclude Include="url.h">
       <Filter>net</Filter>
     </ClInclude>
+    <ClInclude Include="url_fetcher_service.h">
+      <Filter>net</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -64,6 +67,9 @@
       <Filter>net</Filter>
     </ClCompile>
     <ClCompile Include="url.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="url_fetcher_service.cpp">
       <Filter>net</Filter>
     </ClCompile>
   </ItemGroup>

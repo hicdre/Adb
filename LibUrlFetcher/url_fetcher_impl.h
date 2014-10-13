@@ -6,7 +6,9 @@
 
 namespace net
 {
-	class URLFetcherImpl : public URLFetcher
+	class URLFetcherImpl 
+		: public URLFetcher
+		, public HttpRequestJob::Delegate
 	{
 	public:
 		URLFetcherImpl(const std::string& url,
@@ -43,7 +45,8 @@ namespace net
 		URLFetcher::RequestType request_type_;  // What type of request is this?
 		URLRequestStatus status_;          // Status of the request
 		URLFetcherDelegate* delegate_;     // Object to notify on completion
-		UrlRequest* request_;
+		HttpRequest* request_;
+		HttpRequestJob* job_;
 		int response_code_;                // HTTP status code for the request
 
 		bool was_cancelled_;
@@ -51,9 +54,6 @@ namespace net
 		int64 current_response_bytes_;
 		// Total expected bytes to receive (-1 if it cannot be determined).
 		int64 total_response_bytes_;
-
-		HttpRequestHeaders extra_request_headers_;
-		std::string referrer_;             // HTTP Referer header value and policy
 
 		bool stop_on_redirect_{ false };
 	};

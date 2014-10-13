@@ -1,25 +1,36 @@
 #pragma once
 #include "http_request.h"
 #include "http_request_job.h"
+#include "url_fetcher.h"
 
 void RunHttpClient()
 {
-	try
+
+	while (true)
 	{
-		net::HttpRequest req("http://www.baidu.com/");
-		req.SetMethod(net::HttpRequest::GET);
+		std::cout << "Enter message: ";
 
-		asio::io_service io;
-		asio::io_service::work work(io);
+		char request[max_length];
+		char tmp[5] = { 0 };
+		std::cin.getline(request, max_length);
+		//char* request = "host:version";
 
-		net::HttpRequestJob job(io, &req, NULL);
-		job.Start();
+		if (!strncmp(request, "quit", 4))
+			break;
 
-		io.run();
-	}
-	catch (std::exception& e)
-	{
-		std::cerr << "Exception: " << e.what() << "\n";
+		try
+		{
+			net::URLFetcher* req = net::URLFetcher::Create(
+				"http://www.baidu.com/",
+				net::URLFetcher::GET, NULL);
+
+			req->Start();
+		}
+		catch (std::exception& e)
+		{
+			std::cerr << "Exception: " << e.what() << "\n";
+		}
+
 	}
 
 }
