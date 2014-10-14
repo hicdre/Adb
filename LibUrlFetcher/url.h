@@ -20,4 +20,6 @@ namespace net
 		std::string host_;
 		std::string path_;
 	};
+
+	std::string EscapeNonASCII(const std::string& input);
 }

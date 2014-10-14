@@ -3,6 +3,8 @@
 #include "http_request.h"
 #include "url_fetcher_service.h"
 
+#include <iostream>
+
 namespace net
 {
 
@@ -90,6 +92,46 @@ namespace net
 	bool URLFetcherImpl::GetResponseAsString(std::string* out_response_string) const
 	{
 		return false;
+	}
+
+	void URLFetcherImpl::OnError(HttpRequestJob* job, const asio::error_code& err)
+	{
+
+	}
+
+	void URLFetcherImpl::OnReceivedHeaders(HttpRequestJob* job, scoped_refptr<HttpResponseHeaders> headers)
+	{
+		responce_headers_ = headers;
+		total_response_bytes_ = responce_headers_->GetContentLength();
+		current_response_bytes_ = 0;
+		response_code_ = responce_headers_->response_code();
+
+		std::string location;
+		if (responce_headers_->IsRedirect(&location)) {
+			if (stop_on_redirect_) {
+				job->Cancel();
+				return;
+			}
+
+			//´¦ÀíÌø×ª
+			//request_->
+// 			request_->SetMethod((HttpRequest::Method)request_type_);
+// 			job_ = URLFetcherService::Get()->CreateRequestJob(request_, this);
+// 			job_->Start();
+			
+		}
+	}
+
+	void URLFetcherImpl::OnReceiveContents(HttpRequestJob* job, const char* data, std::size_t len)
+	{
+		current_response_bytes_ += len;
+		//for test
+		std::cout.write(data, len);
+	}
+
+	void URLFetcherImpl::OnReceiveComplete(HttpRequestJob* job)
+	{
+
 	}
 
 }

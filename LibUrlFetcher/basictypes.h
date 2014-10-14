@@ -23,3 +23,7 @@ const int32 kint32max = ((int32)0x7FFFFFFF);
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
   TypeName(const TypeName&);               \
   void operator=(const TypeName&)
+
+template <typename T, size_t N>
+char(&ArraySizeHelper(T(&array)[N]))[N];
+#define arraysize(array) (sizeof(ArraySizeHelper(array)))

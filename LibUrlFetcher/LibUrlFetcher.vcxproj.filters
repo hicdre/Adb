@@ -7,6 +7,9 @@
     <Filter Include="net">
       <UniqueIdentifier>{9b2b48e3-6ef0-42bb-ace0-c8f4323b8e6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{c5ec08c9-6028-472d-9ee4-fdf483a560df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -18,7 +21,6 @@
     <ClInclude Include="targetver.h">
       <Filter>build</Filter>
     </ClInclude>
-    <ClInclude Include="basictypes.h" />
     <ClInclude Include="url_fetcher.h">
       <Filter>net</Filter>
     </ClInclude>
@@ -34,9 +36,6 @@
     <ClInclude Include="http_request_job.h">
       <Filter>net</Filter>
     </ClInclude>
-    <ClInclude Include="url_request.h">
-      <Filter>net</Filter>
-    </ClInclude>
     <ClInclude Include="http_request.h">
       <Filter>net</Filter>
     </ClInclude>
@@ -45,6 +44,18 @@
     </ClInclude>
     <ClInclude Include="url_fetcher_service.h">
       <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="http_response_headers.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="string_tokenizer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="basictypes.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="scoped_ptr.h">
+      <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -60,9 +71,6 @@
     <ClCompile Include="http_request_job.cpp">
       <Filter>net</Filter>
     </ClCompile>
-    <ClCompile Include="url_request.cpp">
-      <Filter>net</Filter>
-    </ClCompile>
     <ClCompile Include="http_request.cpp">
       <Filter>net</Filter>
     </ClCompile>
@@ -70,6 +78,9 @@
       <Filter>net</Filter>
     </ClCompile>
     <ClCompile Include="url_fetcher_service.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="http_response_headers.cpp">
       <Filter>net</Filter>
     </ClCompile>
   </ItemGroup>
