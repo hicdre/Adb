@@ -7,6 +7,9 @@ namespace net
 	class URLFetcherService
 	{
 	public:
+		URLFetcherService();
+		~URLFetcherService();
+
 		static URLFetcherService* Get();
 
 		void Cancel();
@@ -18,11 +21,8 @@ namespace net
 			HttpRequestJob::Delegate* delegate);
 
 	private:
-		URLFetcherService();
-		~URLFetcherService();
-
-		asio::io_service* io_service_;
-		asio::io_service::work* io_work_;
+		std::shared_ptr<asio::io_service> io_service_;
+		std::shared_ptr<asio::io_service::work> io_work_;
 		std::thread* thread_;
 	};
 }

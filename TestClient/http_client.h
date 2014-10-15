@@ -2,6 +2,7 @@
 #include "http_request.h"
 #include "http_request_job.h"
 #include "url_fetcher.h"
+#include "url_fetcher_service.h"
 #include <thread>
 
 class HttpClient : public net::URLFetcherDelegate
@@ -32,7 +33,7 @@ public:
 
 void RunHttpClient()
 {
-	
+	net::URLFetcherService service;
 	HttpClient client;
 	while (true)
 	{
@@ -48,8 +49,7 @@ void RunHttpClient()
 
 		try
 		{
-			client.GetUrl("http://www.baidu.com/");
-			//break;
+			client.GetUrl("http://211.162.73.115/PASV/BE5FC5DE6D834347B0728363F780C7DA/211.162.73.113/");
 		}
 		catch (std::exception& e)
 		{

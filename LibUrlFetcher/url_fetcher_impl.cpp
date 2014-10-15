@@ -150,7 +150,6 @@ namespace net
 			delegate_->OnURLFetchComplete(this);
 
 		//ÇåÀísocket
-		job_->Release();
 		job_.reset();
 	}
 

@@ -99,7 +99,7 @@ namespace net
 		if (url.empty())
 			return;
 
-		std::regex pattern(R"(^http://([a-zA-Z0-9\.\-]+)(/[a-zA-Z0-9\.=-_]*)$)");
+		std::regex pattern(R"(^http://([a-zA-Z0-9\.\-]+)(/[a-zA-Z0-9\.=\-/_]*)$)");
 		std::match_results<std::string::const_iterator> result;
 		if (!std::regex_match(url, result, pattern))
 			return;

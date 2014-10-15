@@ -5,56 +5,48 @@
 
 namespace net
 {
+	namespace
+	{
+		static void io_service_run(std::shared_ptr<asio::io_service> io)
+		{
+			io->run();
+		}
 
+		static URLFetcherService* g_service = NULL;
+	}
 
 	URLFetcherService::URLFetcherService()
 		: io_work_(NULL)
 	{
-		io_service_ = new asio::io_service;
-		io_work_ = new asio::io_service::work(*io_service_);
-		thread_ = new std::thread([this]()
-		{
-			io_service_->run();
-		});
+		io_service_.reset(new asio::io_service);
+		io_work_.reset(new asio::io_service::work(*io_service_));
+		thread_ = new std::thread(std::bind(io_service_run, io_service_));
+
+		g_service = this;
 	}
 
 	URLFetcherService::~URLFetcherService()
 	{
 		Cancel();
+
+		g_service = NULL;
 	}
 
 	void URLFetcherService::Cancel()
 	{
-		if (io_work_)
-			delete io_work_;
-		io_work_ = NULL;
-		if (io_service_)
-			io_service_->stop();
-		if (thread_)
+		io_work_.reset();
+		io_service_->stop();
+		if (thread_) {
 			thread_->join();
-		if (io_service_)
-			delete io_service_;
-		io_service_ = NULL;
-		if (thread_)
 			delete thread_;
-		thread_ = NULL;
+			thread_ = NULL;
+		}
 		
 	}
 
 	URLFetcherService* URLFetcherService::Get()
 	{
-		static URLFetcherService* service = NULL;
-		static std::once_flag flag;
-		std::call_once(flag, []()
-		{
-			service = new URLFetcherService;
-			atexit([]()
-			{
-				delete service;
-				service = NULL;
-			});
-		});
-		return service;
+		return g_service;
 	}
 
 	HttpRequestJob* URLFetcherService::CreateRequestJob(

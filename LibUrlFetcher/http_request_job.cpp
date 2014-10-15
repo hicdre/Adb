@@ -24,8 +24,7 @@ namespace net
 	HttpRequestJob::~HttpRequestJob()
 	{
 		resolver_.cancel();
-		//socket_.close();
-		socket_.shutdown(asio::ip::tcp::socket::shutdown_both);
+		socket_.close();
 	}
 
 
@@ -218,7 +217,7 @@ namespace net
 		{
 			if (delegate_)
 				delegate_->OnReceiveComplete(this);
-			//Release();
+			Release();
 		}
 	}
 
@@ -226,8 +225,8 @@ namespace net
 	{
 		cancel_ = true;
 		delegate_ = NULL;
-		resolver_.cancel();
-		socket_.cancel();
+		//resolver_.cancel();
+		//socket_.cancel();
 	}
 
 	
