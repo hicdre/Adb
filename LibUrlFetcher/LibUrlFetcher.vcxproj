@@ -85,10 +85,13 @@
     <ClInclude Include="http_request.h" />
     <ClInclude Include="http_request_headers.h" />
     <ClInclude Include="http_response_headers.h" />
+    <ClInclude Include="http_response_writer.h" />
+    <ClInclude Include="lock.h" />
     <ClInclude Include="scoped_ptr.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="string_tokenizer.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="message_loop.h" />
     <ClInclude Include="url.h" />
     <ClInclude Include="url_fetcher.h" />
     <ClInclude Include="url_fetcher_impl.h" />
@@ -100,10 +103,13 @@
     <ClCompile Include="http_request.cpp" />
     <ClCompile Include="http_request_headers.cpp" />
     <ClCompile Include="http_response_headers.cpp" />
+    <ClCompile Include="http_response_writer.cpp" />
+    <ClCompile Include="lock.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="message_loop.cpp" />
     <ClCompile Include="url.cpp" />
     <ClCompile Include="url_fetcher_impl.cpp" />
     <ClCompile Include="http_request_job.cpp" />

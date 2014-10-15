@@ -14,6 +14,7 @@ namespace net
 		~HttpRequest();
 
 		bool IsValid() const;
+		void SetUrl(const URL& url);
 
 		const URL& GetUrl() const { return url_; }
 

@@ -4,6 +4,10 @@ template <class T>
 class scoped_ptr
 {
 public:
+	scoped_ptr()
+		: ptr_(NULL)
+	{
+	}
 	scoped_ptr(T* t)
 		: ptr_(NULL)
 	{
@@ -13,24 +17,24 @@ public:
 	{
 		Clear();
 	}
-	void reset(T* t)
+	void reset(T* t = NULL)
 	{
 		Clear();
 		ptr_ = t;
 	}
 	void Clear()
 	{
-		if (p_)
-			delete p_;
-		p_ = NULL;
+		if (ptr_)
+			delete ptr_;
+		ptr_ = NULL;
 	}
 	T* operator->() const
 	{
-		return p_;
+		return ptr_;
 	}
 	T* get() const
 	{
-		return p_;
+		return ptr_;
 	}
 
 private:
@@ -60,7 +64,7 @@ public:
 		if (p_)
 			p_->AddRef();
 	}
-	void reset(T* t)
+	void reset(T* t = NULL)
 	{
 		Clear();
 		p_ = t;

@@ -14,6 +14,9 @@ namespace net
 		std::string host() const { return host_; }
 		std::string path() const { return path_; }
 
+		void set_path(std::string path);
+
+		std::string to_string() const;
 	private:
 		void ParseURL(const std::string& url);
 		bool valid_;

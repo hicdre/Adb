@@ -22,6 +22,13 @@ namespace net
 		return url_.IsValid();
 	}
 
+
+	void HttpRequest::SetUrl(const URL& url)
+	{
+		url_ = url;
+	}
+
+
 	void HttpRequest::SetExtraHeaders(const std::string& extra_request_headers)
 	{
 		extra_request_headers_.Clear();

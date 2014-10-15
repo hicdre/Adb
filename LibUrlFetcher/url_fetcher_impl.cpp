@@ -28,13 +28,16 @@ namespace net
 		, was_cancelled_(false)
 		, current_response_bytes_(0)
 		, total_response_bytes_(-1)
+		, redirect_count_(0)
 	{
 
 	}
 
 	URLFetcherImpl::~URLFetcherImpl()
 	{
-
+		if (job_.get()) {
+			job_->Cancel();
+		}
 	}
 
 	void URLFetcherImpl::SetReferrer(const std::string& referrer)
@@ -59,8 +62,16 @@ namespace net
 
 	void URLFetcherImpl::Start()
 	{
+		if (status_.is_io_pending())
+			return;
+
+		status_.set_status(URLRequestStatus::IO_PENDING);
 		request_->SetMethod((HttpRequest::Method)request_type_);
-		job_ = URLFetcherService::Get()->CreateRequestJob(request_, this);
+		if (!response_.get())
+			response_.reset(new HttpResponseStringWriter);
+
+		job_.reset(URLFetcherService::Get()->CreateRequestJob(request_, this));
+
 		job_->Start();
 	}
 
@@ -69,7 +80,7 @@ namespace net
 		return original_url_;
 	}
 
-	const std::string& URLFetcherImpl::GetURL() const
+	const URL& URLFetcherImpl::GetURL() const
 	{
 		return url_;
 	}
@@ -84,19 +95,22 @@ namespace net
 		return response_code_;
 	}
 
-	void URLFetcherImpl::ReceivedContentWasMalformed()
-	{
-
-	}
-
 	bool URLFetcherImpl::GetResponseAsString(std::string* out_response_string) const
 	{
-		return false;
+		HttpResponseStringWriter* string_response = response_->GetAsStringWriter();
+		if (!string_response)
+			return false;
+
+		*out_response_string = string_response->GetString();
+		return true;
 	}
 
 	void URLFetcherImpl::OnError(HttpRequestJob* job, const asio::error_code& err)
 	{
-
+		status_.set_status(URLRequestStatus::FAILED);
+		status_.set_error(err.value());
+		if (delegate_)
+			delegate_->OnURLFetchComplete(this);
 	}
 
 	void URLFetcherImpl::OnReceivedHeaders(HttpRequestJob* job, scoped_refptr<HttpResponseHeaders> headers)
@@ -108,30 +122,68 @@ namespace net
 
 		std::string location;
 		if (responce_headers_->IsRedirect(&location)) {
-			if (stop_on_redirect_) {
-				job->Cancel();
+			if (!stop_on_redirect_) {
+				HandleRedirectLocation(location);
 				return;
 			}
 
-			//处理跳转
-			//request_->
-// 			request_->SetMethod((HttpRequest::Method)request_type_);
-// 			job_ = URLFetcherService::Get()->CreateRequestJob(request_, this);
-// 			job_->Start();
-			
+			job->Cancel();
+			return;
 		}
+		response_->Init();
 	}
 
 	void URLFetcherImpl::OnReceiveContents(HttpRequestJob* job, const char* data, std::size_t len)
 	{
 		current_response_bytes_ += len;
-		//for test
-		std::cout.write(data, len);
+
+		response_->Write(data, len);
+
+		if (delegate_)
+			delegate_->OnURLFetchDownloadProgress(this, current_response_bytes_, total_response_bytes_);
 	}
 
 	void URLFetcherImpl::OnReceiveComplete(HttpRequestJob* job)
 	{
+		status_.set_status(URLRequestStatus::SUCCESS);
+		if (delegate_)
+			delegate_->OnURLFetchComplete(this);
 
+		//清理socket
+		job_->Release();
+		job_.reset();
+	}
+
+	void URLFetcherImpl::HandleRedirectLocation(const std::string& location)
+	{
+		URL url;
+		if (!_strnicmp(location.c_str(), "http://", 7))
+		{
+			url = location;
+		}
+		else if (location[0] == '/')
+		{
+			url.set_path(location);
+		}
+		else
+		{
+			std::string origin_path = url_.path();
+			std::string::size_type pos = origin_path.find_last_of('/');
+			assert(pos != std::string::npos);
+			url.set_path(origin_path.substr(0, pos + 1) + location);
+		}
+
+		job_->Redirect(url);
+	}
+
+	void URLFetcherImpl::OnRedirectUrl(HttpRequestJob* job, const URL& url)
+	{
+		static int kRedirectMax = 5;
+		url_ = url;
+		redirect_count_++;
+		if (redirect_count_ >= 5) {
+			job->Cancel();
+		}
 	}
 
 }

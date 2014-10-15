@@ -15,13 +15,37 @@ namespace net
 		, request_(request)
 		, delegate_(delegate)
 		, cancel_(false)
+		, ref_count_(0)
 	{
 		
 	}
 
 
+	HttpRequestJob::~HttpRequestJob()
+	{
+		resolver_.cancel();
+		//socket_.close();
+		socket_.shutdown(asio::ip::tcp::socket::shutdown_both);
+	}
+
+
+	void HttpRequestJob::AddRef()
+	{
+		InterlockedIncrement(&ref_count_);
+	}
+
+	void HttpRequestJob::Release()
+	{
+		if (InterlockedDecrement(&ref_count_) == 0)
+		{
+			delete this;
+		}
+	}
+
+
 	void HttpRequestJob::Start()
 	{
+		AddRef();
 		asio::ip::tcp::resolver::query query(request_->GetUrl().host(), "http");
 		resolver_.async_resolve(query,
 			std::bind(&HttpRequestJob::HandleResolve, this,
@@ -30,14 +54,34 @@ namespace net
 	}
 
 
+	void HttpRequestJob::Redirect(const URL& url)
+	{
+		
+		socket_.get_io_service().post(
+			std::bind(&HttpRequestJob::HandleRedirect, this, url));
+	}
+
+
+	void HttpRequestJob::HandleRedirect(URL url)
+	{
+		request_->SetUrl(url);
+		if (delegate_)
+			delegate_->OnRedirectUrl(this, url);
+		Start();
+	}
+
+
+
 	void HttpRequestJob::HandleResolve(const asio::error_code& err, asio::ip::tcp::resolver::iterator endpoint_iterator)
 	{
 		if (!err)
 		{
 			// Attempt a connection to each endpoint in the list until we
 			// successfully establish a connection.
-			if (is_canceled())
+			if (is_canceled()) {
+				Release();
 				return;
+			}
 			asio::async_connect(socket_, endpoint_iterator,
 				std::bind(&HttpRequestJob::HandleConnect, this,
 				std::placeholders::_1));
@@ -46,6 +90,7 @@ namespace net
 		{
 			if (delegate_)
 				delegate_->OnError(this, err);
+			Release();
 		}
 	}
 
@@ -53,8 +98,10 @@ namespace net
 	{
 		if (!err)
 		{
-			if (is_canceled())
+			if (is_canceled()) {
+				Release();
 				return;
+			}
 
 			request_string_.clear();
 			request_->WriteToString(&request_string_);
@@ -69,6 +116,7 @@ namespace net
 		{
 			if (delegate_)
 				delegate_->OnError(this, err);
+			Release();
 		}
 	}
 
@@ -76,8 +124,10 @@ namespace net
 	{
 		if (!err)
 		{
-			if (is_canceled())
+			if (is_canceled()) {
+				Release();
 				return;
+			}
 			// Read the response status line. The response_ streambuf will
 			// automatically grow to accommodate the entire line. The growth may be
 			// limited by passing a maximum size to the streambuf constructor.
@@ -90,6 +140,7 @@ namespace net
 		{
 			if (delegate_)
 				delegate_->OnError(this, err);
+			Release();
 		}
 	}
 
@@ -97,8 +148,10 @@ namespace net
 	{
 		if (!err)
 		{
-			if (is_canceled())
+			if (is_canceled()) {
+				Release();
 				return;
+			}
 
 			asio::streambuf::const_buffers_type buffer = response_.data();
 			response_headers_.reset(new HttpResponseHeaders(std::string(
@@ -108,9 +161,11 @@ namespace net
 
 			if (delegate_)
 				delegate_->OnReceivedHeaders(this, response_headers_);
-
-			if (is_canceled())
+			
+			if (is_canceled()) {
+				Release();
 				return;
+			}
 
 			// Start reading remaining data until EOF.
 			asio::async_read(socket_, response_,
@@ -122,6 +177,7 @@ namespace net
 		else
 		{
 			std::cout << "Error: " << err << "\n";
+			Release();
 		}
 	}
 
@@ -129,8 +185,10 @@ namespace net
 	{
 		if (!err)
 		{
-			if (is_canceled())
+			if (is_canceled()) {
+				Release();
 				return;
+			}
 
 			asio::streambuf::const_buffers_type buffer = response_.data();
 			std::size_t buffer_len = response_.size();
@@ -139,8 +197,10 @@ namespace net
 			// Write all of the data that has been read so far.
 			response_.consume(buffer_len);
 
-			if (is_canceled())
+			if (is_canceled()) {
+				Release();
 				return;
+			}
 
 			// Continue reading remaining data until EOF.
 			asio::async_read(socket_, response_,
@@ -152,17 +212,24 @@ namespace net
 		else if (err != asio::error::eof)
 		{
 			std::cout << "Error: " << err << "\n";
+			Release();
 		}
 		else
 		{
 			if (delegate_)
 				delegate_->OnReceiveComplete(this);
+			//Release();
 		}
 	}
 
 	void HttpRequestJob::Cancel()
 	{
 		cancel_ = true;
+		delegate_ = NULL;
+		resolver_.cancel();
+		socket_.cancel();
 	}
+
+	
 
 }

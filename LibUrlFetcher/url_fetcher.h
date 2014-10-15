@@ -2,6 +2,7 @@
 #include "asio.hpp"
 #include "basictypes.h"
 #include "url_request_status.h"
+#include "url.h"
 
 namespace net
 {
@@ -61,7 +62,7 @@ namespace net
 		virtual const std::string& GetOriginalURL() const = 0;
 
 		// Return the URL that this fetcher is processing.
-		virtual const std::string& GetURL() const = 0;
+		virtual const URL& GetURL() const = 0;
 
 		// The status of the URL fetch.
 		virtual const URLRequestStatus& GetStatus() const = 0;
@@ -72,9 +73,6 @@ namespace net
 
 		// Cookies received.
 		//virtual const ResponseCookies& GetCookies() const = 0;
-
-		// Reports that the received content was malformed.
-		virtual void ReceivedContentWasMalformed() = 0;
 
 		// Get the response as a string. Return false if the fetcher was not
 		// set to store the response as a string.

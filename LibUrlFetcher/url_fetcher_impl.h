@@ -3,6 +3,7 @@
 #include "http_request_headers.h"
 #include "http_request_job.h"
 #include "http_response_headers.h"
+#include "http_response_writer.h"
 
 namespace net
 {
@@ -23,28 +24,32 @@ namespace net
 		virtual void SetStopOnRedirect(bool stop_on_redirect) override;
 		virtual void Start() override;
 		virtual const std::string& GetOriginalURL() const override;
-		virtual const std::string& GetURL() const override;
+		virtual const URL& GetURL() const override;
 		virtual const URLRequestStatus& GetStatus() const override;
 		virtual int GetResponseCode() const override;
-		virtual void ReceivedContentWasMalformed() override;
 		virtual bool GetResponseAsString(std::string* out_response_string) const override;
 
 		virtual void OnError(HttpRequestJob* job, const asio::error_code& err) override;
+		virtual void OnRedirectUrl(HttpRequestJob* job, const URL& url) override;
+
 		virtual void OnReceivedHeaders(HttpRequestJob* job, scoped_refptr<HttpResponseHeaders> headers) override;
 		virtual void OnReceiveContents(HttpRequestJob* job, const char* data, std::size_t len) override;
 		virtual void OnReceiveComplete(HttpRequestJob* job) override;
 
 	private:
+		void HandleRedirectLocation(const std::string& location);
 		std::string original_url_;                // The URL we were asked to fetch
-		std::string url_;                         // The URL we eventually wound up at
+		URL url_;                         // The URL we eventually wound up at
 		URLFetcher::RequestType request_type_;  // What type of request is this?
 		URLRequestStatus status_;          // Status of the request
 		URLFetcherDelegate* delegate_;     // Object to notify on completion
 		HttpRequest* request_;
-		HttpRequestJob* job_;
-		int response_code_;                // HTTP status code for the request
+		scoped_refptr<HttpRequestJob> job_;
 
+		
+		int response_code_;                // HTTP status code for the request
 		scoped_refptr<HttpResponseHeaders> responce_headers_;
+		scoped_ptr<HttpResponseWriter> response_;
 
 		bool was_cancelled_;
 		// Number of bytes received so far.
@@ -54,6 +59,7 @@ namespace net
 
 		//config option
 		bool stop_on_redirect_{ false };
+		int redirect_count_;
 
 
 	};

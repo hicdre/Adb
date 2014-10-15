@@ -113,6 +113,22 @@ namespace net
 		valid_ = true;
 	}
 
+	std::string URL::to_string() const
+	{
+		std::string ret = "http://";
+		ret.append(host_);
+		ret.append(path_);
+		return ret;
+	}
+
+	void URL::set_path(std::string path)
+	{
+		if (path[0] == '/')
+		{
+			path_ = path;
+		}
+	}
+
 	std::string EscapeNonASCII(const std::string& input)
 	{
 		return Escape(input, kNonASCIICharmap, false);
